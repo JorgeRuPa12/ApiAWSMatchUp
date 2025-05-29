@@ -16,7 +16,7 @@ public class Startup
     private Secrets keys;
     public Startup(IConfiguration configuration)
     {
-        string secretJson = HelperSecretManager.GetSecretAsync().GetAwaiter().GetResult(); 
+        string secretJson = HelperSecretManager.GetSecretAsync().GetAwaiter().GetResult();
         keys = JsonConvert.DeserializeObject<Secrets>(secretJson);
         string secretKey = keys.Secretkey;
         Configuration = configuration;
@@ -40,7 +40,7 @@ public class Startup
 
         services.AddControllers();
         services.AddTransient<RepositoryMatchUp>();
-        services.AddDbContext<MatchUpContext>(options => options.UseMySQL(connectionString));
+        services.AddDbContext<MatchUpContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
         services.AddCors(options =>
         {
