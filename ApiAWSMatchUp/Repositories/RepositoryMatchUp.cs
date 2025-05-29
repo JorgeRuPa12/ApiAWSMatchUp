@@ -13,7 +13,7 @@ namespace ApiAWSMatchUp.Repositories
         public RepositoryMatchUp(MatchUpContext context)
         {
             this.context = context;
-            this.containerUrl = "https://storagematchup.blob.core.windows.net/imagenes";
+            this.containerUrl = "https://bucket-matchup-jrp.s3.us-east-1.amazonaws.com";
         }
         #region Deportes
 

@@ -1,6 +1,8 @@
-﻿using Microsoft.AspNetCore.Authentication;
+﻿using ApiAWSMatchUp.Models;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json;
 using System.Text;
 
 namespace ApiAWSMatchUp.Helpers
@@ -12,10 +14,10 @@ namespace ApiAWSMatchUp.Helpers
         public string SecretKey { get; set; }
         public HelperActionServicesOAuth(IConfiguration configuration, string secretKey)
         {
-            this.Issuer =
-                configuration.GetValue<string>("ApiOAuthToken:Issuer");
-            this.Audience =
-                configuration.GetValue<string>("ApiOAuthToken:Audience");
+            string secretJson = HelperSecretManager.GetSecretAsync().GetAwaiter().GetResult();
+            Secrets keys = JsonConvert.DeserializeObject<Secrets>(secretJson);
+            this.Issuer = keys.Issuer;
+            this.Audience = keys.Audience;
             this.SecretKey = secretKey;
         }
 

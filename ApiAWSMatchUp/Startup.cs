@@ -35,10 +35,7 @@ public class Startup
 
 
         // Add services to the container.
-        //string connectionString = keys.MySql;
-        string connectionString = "server=matchupmysqljrp.cw9ksg8u4fgi.us-east-1.rds.amazonaws.com;port=3306;user id=adminsql;password=Admin123;database=matchup";
-
-        services.AddControllers();
+        string connectionString = keys.MySql;
         services.AddTransient<RepositoryMatchUp>();
         services.AddDbContext<MatchUpContext>(options => options.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString)));
 
@@ -46,9 +43,42 @@ public class Startup
         {
             options.AddPolicy("AllowAllOrigins", x => x.AllowAnyOrigin());
         });
-        services.AddSwaggerGen(options =>
+        //services.AddSwaggerGen(options =>
+        //{
+        //    options.SwaggerDoc("v1", new OpenApiInfo { Title = "Api AWS MatchUp", Version = "v1" });
+        //});
+
+        services.AddSwaggerGen(c =>
         {
-            options.SwaggerDoc("v1", new OpenApiInfo { Title = "Api AWS MatchUp", Version = "v1" });
+            c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
+            {
+                Title = "ApiMatchUp",
+                Version = "v1"
+            });
+
+            c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Description = "Ingrese el token JWT con el prefijo 'Bearer '",
+                Name = "Authorization",
+                In = Microsoft.OpenApi.Models.ParameterLocation.Header,
+                Type = Microsoft.OpenApi.Models.SecuritySchemeType.ApiKey,
+                Scheme = "Bearer"
+            });
+
+            c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
+    {
+        {
+            new Microsoft.OpenApi.Models.OpenApiSecurityScheme
+            {
+                Reference = new Microsoft.OpenApi.Models.OpenApiReference
+                {
+                    Type = Microsoft.OpenApi.Models.ReferenceType.SecurityScheme,
+                    Id = "Bearer"
+                }
+            },
+            new string[] {}
+        }
+    });
         });
         services.AddControllers();
     }
